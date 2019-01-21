@@ -1,0 +1,26 @@
+{
+  "name": "react-native-navigation-redux-integration",
+  "description": "Redux middleware for React Native Navigation v2",
+  "version": "0.0.1",
+  "main": "./index.js",
+  "author": "Matija Anic-Antic (https://github.com/manicantic)",
+  "license": "MIT",
+  "repository": {
+    "url": "git@github.com:manicantic/react-native-navigation-redux-integration.git",
+    "type": "git"
+  },
+  "dependencies": {
+    "invariant": "^2.2.4"
+  },
+  "devDependencies": {
+    "flow-bin": "^0.64.0",
+    "react": "^16.4.0"
+  },
+  "files": [
+    "src",
+    "index.d.ts"
+  ],
+  "peerDependencies": {
+    "react-native-navigation": ">=2.0.0"
+  }
+}
