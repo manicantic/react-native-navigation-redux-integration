@@ -1,14 +1,15 @@
 import {actionTypes} from './actions';
+import {LayoutType} from './constants';
 import {findStackInTab, isLastScreenInStack} from './helpers';
 
-export const reducer = (state = null, action) => {
+const reducer = (state = null, action) => {
   switch (action.type) {
-    case actionTypes.setRoot:
+    case actionTypes.rootSet:
       return action.payload;
     case actionTypes.componentPushed:
       {
         const root = state.root;
-        if (root.type === 'BottomTabs') {
+        if (root.type === LayoutType.BottomTabs) {
           const tabIndex = findStackInTab(root, action.payload.componentId);
           const newTabs = [...root.children];
           newTabs[tabIndex].children = [
@@ -16,8 +17,11 @@ export const reducer = (state = null, action) => {
             action.payload.layout
           ];
           return {
-            ...root,
-            children: newTabs
+            ...state,
+            root: {
+              ...root,
+              children: newTabs
+            }
           };
         }
       }
@@ -26,10 +30,10 @@ export const reducer = (state = null, action) => {
         const root = state.root;
         let isBottomTabs = false;
         let shouldRemoveLastChildren = null;
-        if (root.type === 'BottomTabs') {
+        if (root.type === LayoutType.BottomTabs) {
           isBottomTabs = true;
           shouldRemoveLastChildren = isLastScreenInStack(root.children[root.activeIndex], action.payload.componentId)
-        } else if (root.type === 'Stack') {
+        } else if (root.type === LayoutType.Stack) {
           shouldRemoveLastChildren = isLastScreenInStack(root.children, action.payload.componentId)
         } else {
           return state;
@@ -43,13 +47,19 @@ export const reducer = (state = null, action) => {
                 .slice(0, -1)
             ];
             return {
-              ...root,
-              children: newTabs
+              ...state,
+              root: {
+                ...root,
+                children: newTabs
+              }
             };
           } else {
             return {
-              ...root,
-              children: children.slice(0, -1)
+              ...state,
+              root: {
+                ...root,
+                children: children.slice(0, -1)
+              }
             };
           }
         } else {
@@ -61,7 +71,7 @@ export const reducer = (state = null, action) => {
         return {
           ...state,
           root: {
-            ...root,
+            ...state.root,
             activeIndex: action.payload.selectedTabIndex
           }
         }
@@ -70,3 +80,5 @@ export const reducer = (state = null, action) => {
       return state;
   }
 }
+
+export default reducer;

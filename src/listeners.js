@@ -1,5 +1,5 @@
-import {setRoot, screenDisappeared, componentPushed} from './actions';
-import {processLayout} from './helpers';
+import {rootSet, screenDisappeared, componentPushed, tabChanged} from './actions';
+import {processRoot, processLayout} from './helpers';
 
 let commandListener = null;
 let navigationButtonEventListener = null;
@@ -12,8 +12,8 @@ const subscribeCommandListener = (navigator, store) => {
       switch (name) {
         case 'setRoot':
           {
-            const initState = processLayout(params.layout);
-            return store.dispatch(setRoot(initState))
+            const initState = processRoot(params.layout);
+            return store.dispatch(rootSet(initState))
           }
         case 'push':
           const componentId = params.componentId;
@@ -29,7 +29,7 @@ const subscribeToBottomTabEvent = (navigator, store) => {
   bottomTabEventListener = navigator
     .events()
     .registerBottomTabSelectedListener((params) => {
-      store.dispatch(tabChange(params));
+      store.dispatch(tabChanged(params));
     })
 }
 
