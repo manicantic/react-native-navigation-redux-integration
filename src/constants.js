@@ -14,3 +14,18 @@ export const LayoutType = {
 export const actionsPrefix = '@NAVIGATOR/';
 
 export const actionNameCreator = name => `${actionsPrefix}${name}`;
+
+export const Events = {
+  setRoot: 'setRoot',
+  mergeOptions: 'mergeOptions',
+  showModal: 'showModal',
+  dismissModal: 'dismissModal',
+  dismissAllModals: 'dismissAllModals',
+  push: 'push',
+  pop: 'pop',
+  popTo: 'popTo',
+  popToRoot: 'popToRoot',
+  setStackRoot: 'setStackRoot',
+  showOverlay: 'showOverlay',
+  dismissOverlay: 'dismissOverlay'
+}

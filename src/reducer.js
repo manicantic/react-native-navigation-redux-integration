@@ -1,6 +1,13 @@
 import {actionTypes} from './actions';
 import {LayoutType} from './constants';
-import {findStackInTab, isLastScreenInStack} from './helpers';
+import {
+  popFromStack,
+  isLastScreenInStack,
+  pushToStack,
+  popToRoot,
+  popToScreen,
+  createActiveScreenString
+} from './helpers';
 
 const reducer = (state = null, action) => {
   switch (action.type) {
@@ -9,21 +16,38 @@ const reducer = (state = null, action) => {
     case actionTypes.componentPushed:
       {
         const root = state.root;
-        if (root.type === LayoutType.BottomTabs) {
-          const tabIndex = findStackInTab(root, action.payload.componentId);
-          const newTabs = [...root.children];
-          newTabs[tabIndex].children = [
-            ...newTabs[tabIndex].children,
-            action.payload.layout
-          ];
-          return {
-            ...state,
-            root: {
-              ...root,
-              children: newTabs
-            }
-          };
-        }
+        const newRoot = pushToStack(Object.assign({}, root), action.payload.componentId, action.payload.layout);
+        return {
+          ...state,
+          root: newRoot
+        };
+      }
+    case actionTypes.screenPopped:
+      {
+        const root = state.root;
+        const newRoot = popFromStack(Object.assign({}, root), action.payload.componentId);
+        return {
+          ...state,
+          root: newRoot
+        };
+      }
+    case actionTypes.stackPoppedToRoot:
+      {
+        const root = state.root;
+        const newRoot = popToRoot(Object.assign({}, root), action.payload.componentId);
+        return {
+          ...state,
+          root: newRoot
+        };
+      }
+    case actionTypes.poppedToScreen:
+      {
+        const root = state.root;
+        const newRoot = popToScreen(Object.assign({}, root), action.payload.componentId);
+        return {
+          ...state,
+          root: newRoot
+        };
       }
     case actionTypes.screenDisappeared:
       {
@@ -68,13 +92,22 @@ const reducer = (state = null, action) => {
       }
     case actionTypes.tabChanged:
       {
+        return state;
+        const root = state.root;
+        const newRoot = popToScreen(Object.assign({}, root), action.payload.componentId);
         return {
           ...state,
-          root: {
-            ...state.root,
-            activeIndex: action.payload.selectedTabIndex
-          }
-        }
+          root: newRoot
+        };
+      }
+    case actionTypes.screenAppeared:
+      {
+        const root = state.root;
+        const newActiveScreen = createActiveScreenString(Object.assign({}, root), action.payload.componentId);
+        return {
+          ...state,
+          activeScreen: newActiveScreen
+        };
       }
     default:
       return state;

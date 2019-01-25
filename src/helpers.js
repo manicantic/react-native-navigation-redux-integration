@@ -84,14 +84,80 @@ export const getActiveComponentId = (root, tabIndex) => {
 
 export const pushToStack = (tree, componentId, layout, stack) => {
   if (tree.id === componentId) {
-    stack = [
-      ...stack,
-      layout
-    ];
+    stack.push(layout);
+    return;
   }
   if (tree.children && tree.children.length) {
     for (var i = 0; i < tree.children.length; i++) 
       pushToStack(tree.children[i], componentId, layout, tree.children);
     }
   return tree;
+}
+
+export const popFromStack = (tree, componentId, stack) => {
+  if (tree.id === componentId) {
+    stack.pop();
+    return;
+  }
+  if (tree.children && tree.children.length) {
+    for (var i = 0; i < tree.children.length; i++) 
+      popFromStack(tree.children[i], componentId, tree.children);
+    }
+  return tree;
+}
+
+export const popToRoot = (tree, componentId, stack) => {
+  if (tree.id === componentId) {
+    while (stack.length > 1) {
+      stack.pop();
+    }
+  }
+  if (tree.children && tree.children.length) {
+    for (var i = 0; i < tree.children.length; i++) 
+      popToRoot(tree.children[i], componentId, tree.children);
+    }
+  return tree;
+}
+
+export const popToScreen = (tree, componentId, stack) => {
+  if (tree.id === componentId) {
+    while (stack[stack.length - 1].id !== componentId) {
+      stack.pop();
+    }
+  }
+  if (tree.children && tree.children.length) {
+    for (var i = 0; i < tree.children.length; i++) 
+      popToScreen(tree.children[i], componentId, tree.children);
+    }
+  return tree;
+}
+
+// TODO
+export const changeTabIndex = (tree, componentId, layout, stack) => {
+  if (tree.id === componentId) {
+    stack.push(layout);
+    return;
+  }
+  if (tree.children && tree.children.length) {
+    for (var i = 0; i < tree.children.length; i++) 
+      changeTabIndex(tree.children[i], componentId, layout, tree.children);
+    }
+  return tree;
+}
+
+export const createActiveScreenString = (tree, componentId, string = '') => {
+  if (tree.id === componentId) {
+    return tree.id;
+  }
+  if (tree.children && tree.children.length) {
+    for (var i = 0; i < tree.children.length; i++) {
+      const part = createActiveScreenString(tree.children[i], componentId, string);
+      if (part) {
+        return `${tree.id}%${part}`;
+      } else {
+        continue;
+      }
+    }
+  }
+  return string;
 }
