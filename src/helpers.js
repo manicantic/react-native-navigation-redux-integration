@@ -1,4 +1,4 @@
-import {LayoutType} from './constants';
+import {LayoutType, isTabsType} from './constants';
 
 export const processLayout = (incomeLayout) => {
   let layout = {};
@@ -67,21 +67,6 @@ export const getTabsId = root => {
   return root.id;
 }
 
-export const getActiveComponentId = (root, tabIndex) => {
-  if (root.type === LayoutType.Component) {
-    return root.id;
-  }
-  if (root.type === LayoutType.Stack) {
-    return getLastComponentIdInStack(root);
-  }
-  if (root.type === LayoutType.BottomTabs) {
-    const activeTabId = root.activeIndex;
-    return getLastComponentIdInStack(root.children[tabIndex !== undefined
-        ? tabIndex
-        : activeTabId]);
-  }
-}
-
 export const pushToStack = (tree, componentId, layout, stack) => {
   if (tree.id === componentId) {
     stack.push(layout);
@@ -132,32 +117,146 @@ export const popToScreen = (tree, componentId, stack) => {
   return tree;
 }
 
-// TODO
-export const changeTabIndex = (tree, componentId, layout, stack) => {
-  if (tree.id === componentId) {
-    stack.push(layout);
-    return;
+export const setStackRoot = (tree, componentId, layoutArray, parentTree) => {
+  if (tree.id === componentId && parentTree.type === LayoutType.Stack) {
+    parentTree.children = layoutArray.map(layout => processLayout(layout));
   }
   if (tree.children && tree.children.length) {
     for (var i = 0; i < tree.children.length; i++) 
-      changeTabIndex(tree.children[i], componentId, layout, tree.children);
+      setStackRoot(tree.children[i], componentId, layoutArray, tree);
     }
   return tree;
 }
 
-export const createActiveScreenString = (tree, componentId, string = '') => {
+export const changeTabIndex = (tree, screensArray, selectedTabIndex, unselectedTabIndex, parentTree) => {
+  if (screensArray.includes(tree.id)) {
+    if (tree.children && tree.children.length) {
+      for (var i = 0; i < tree.children.length; i++) {
+        const isChanged = changeTabIndex(tree.children[i], screensArray, selectedTabIndex, unselectedTabIndex, tree);
+        if (isChanged) 
+          return tree;
+        }
+      }
+    if (parentTree && isTabsType(parentTree.type) && parentTree.activeIndex === unselectedTabIndex) {
+      parentTree.activeIndex = selectedTabIndex;
+      return tree;
+    }
+  }
+}
+
+export const changeTabIndexToComponent = (tree, componentId, currentTabIndex) => {
+  if (tree.id === componentId && isTabsType(tree.type)) {
+    tree.activeIndex = currentTabIndex;
+  }
+  if (tree.children && tree.children.length) {
+    for (var i = 0; i < tree.children.length; i++) 
+      changeTabIndexToComponent(tree.children[i], componentId, currentTabIndex);
+    }
+  return tree;
+}
+
+export const createActiveScreenArray = (tree, componentId) => {
   if (tree.id === componentId) {
-    return tree.id;
+    return [tree.id];
   }
   if (tree.children && tree.children.length) {
     for (var i = 0; i < tree.children.length; i++) {
-      const part = createActiveScreenString(tree.children[i], componentId, string);
-      if (part) {
-        return `${tree.id}%${part}`;
+      const array = createActiveScreenArray(tree.children[i], componentId);
+      if (array) {
+        array.push(tree.id);
+        return array;
       } else {
         continue;
       }
     }
   }
-  return string;
+}
+
+export const hasComponentWithId = (tree, componentId) => {
+  if (tree.id === componentId) {
+    return true;
+  }
+  if (tree.children && tree.children.length) {
+    for (var i = 0; i < tree.children.length; i++) {
+      const hasComponent = hasComponentWithId(tree.children[i], componentId);
+      if (hasComponent) {
+        return true;
+      }
+    }
+  }
+}
+
+export const removeScreenIfNeeded = (tree, currentTree, componentId, parentTree) => {
+  if (currentTree.id === componentId) {
+    if (parentTree) {
+      if (parentTree.type === LayoutType.Stack && parentTree.children.length > 1) {
+        parentTree
+          .children
+          .pop();
+        return;
+      } else if (parentTree.type === LayoutType.Stack || isTabsType(parentTree.type)) {
+        return removeScreenIfNeeded(tree, tree, parentTree.id);
+      } else {
+        return {delete: true};
+      }
+    } else {
+      return {delete: true};
+    }
+  }
+  if (isTabsType(currentTree.type)) {
+    const isChanged = removeScreenIfNeeded(tree, currentTree.children[currentTree.activeIndex], componentId, currentTree);
+    if (isChanged && isChanged.delete) {
+      return {};
+    }
+    return currentTree;
+  } else if (currentTree.type === LayoutType.Stack) {
+    const isChanged = removeScreenIfNeeded(tree, currentTree.children[currentTree.children.length - 1], componentId, currentTree);
+    if (isChanged && isChanged.delete) {
+      return {};
+    }
+    return currentTree;
+  }
+  return tree;
+}
+
+export const isComponentOfType = (tree, componentId, type) => {
+  if (tree.id === componentId) {
+    return tree.type === type;
+  }
+  if (tree.children && tree.children.length) {
+    for (var i = 0; i < tree.children.length; i++) {
+      const isType = isComponentOfType(tree.children[i], componentId, type);
+      if (isType) {
+        return isType;
+      }
+    }
+  }
+}
+
+export const getActiveComponentId = (root) => {
+  if (root.type === LayoutType.Component) {
+    return root.id;
+  }
+  if (root.type === LayoutType.Stack) {
+    return getActiveComponentId(root.children[root.children.length - 1]);
+  }
+  if (isTabsType(root.type)) {
+    return getActiveComponentId(root.children[root.activeIndex]);
+  }
+}
+
+export const getActiveScreenOfTab = (tree, tabId, tabIndex) => {
+  if (tree.id === tabId) {
+    return getActiveComponentId(tree.children[tabIndex !== undefined
+        ? tabIndex
+        : tree.activeIndex]);
+  }
+  if (tree.children && tree.children.length) {
+    for (var i = 0; i < tree.children.length; i++) {
+      const id = getActiveScreenOfTab(tree.children[i], tabId, tabIndex);
+      if (id) {
+        return id;
+      }
+    }
+  }
 }

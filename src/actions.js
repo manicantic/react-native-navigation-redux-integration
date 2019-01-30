@@ -2,37 +2,50 @@ import {actionNameCreator} from './constants';
 
 export const actionTypes = {
   rootSet: actionNameCreator('ROOT_SET'),
-  componentPushed: actionNameCreator('COMPONENT_PUSHED'),
+  screenPushed: actionNameCreator('SCREEN_PUSHED'),
   tabChanged: actionNameCreator('TAB_CHANGED'),
   screenAppeared: actionNameCreator('SCREEN_APPEARED'),
   screenDisappeared: actionNameCreator('SCREEN_DISAPPEARED'),
   screenPopped: actionNameCreator('SCREEN_POPPED'),
   stackPoppedToRoot: actionNameCreator('POPPED_TO_ROOT'),
-  poppedToScreen: actionNameCreator('POPPED_TO_SCREEN')
+  poppedToScreen: actionNameCreator('POPPED_TO_SCREEN'),
+  stackRootSet: actionNameCreator('STACK_ROOT_SET'),
+  tabChangedWithMergeOptions: actionNameCreator('TAB_CHANGED_WITH_OPTIONS'),
+  modalShown: actionNameCreator('MODAL_SHOWN'),
+  modalDismissed: actionNameCreator('MODAL_DISMISSED'),
+  allModalsDismissed: actionNameCreator('ALL_MODALS_DISMISSED')
 }
 
 export const middlewareActionTypes = {
-  push: actionNameCreator('PUSH')
+  push: actionNameCreator('PUSH'),
+  pop: actionNameCreator('POP'),
+  popToRoot: actionNameCreator('POP_TO_ROOT'),
+  setStackRoot: actionNameCreator('SET_STACK_ROOT'),
+  dismissLastModal: actionNameCreator('DISMISS_LAST_MODAL')
 }
 
 export const middlewareActionTypesArray = Object.values(middlewareActionTypes);
 
 export const rootSet = payload => ({type: actionTypes.rootSet, payload});
-export const componentPushed = payload => ({type: actionTypes.componentPushed, payload});
+export const screenPushed = payload => ({type: actionTypes.screenPushed, payload});
 export const tabChanged = payload => ({type: actionTypes.tabChanged, payload});
 export const screenDisappeared = payload => ({type: actionTypes.screenDisappeared, payload});
 export const screenAppeared = payload => ({type: actionTypes.screenAppeared, payload});
 export const screenPopped = payload => ({type: actionTypes.screenPopped, payload});
 export const stackPoppedToRoot = payload => ({type: actionTypes.stackPoppedToRoot, payload});
 export const poppedToScreen = payload => ({type: actionTypes.poppedToScreen, payload});
+export const stackRootSet = payload => ({type: actionTypes.stackRootSet, payload});
+export const tabChangedWithMergeOptions = payload => ({type: actionTypes.tabChangedWithMergeOptions, payload});
+export const modalShown = payload => ({type: actionTypes.modalShown, payload});
+export const modalDismissed = payload => ({type: actionTypes.modalDismissed, payload});
+export const allModalsDismissed = payload => ({type: actionTypes.allModalsDismissed, payload});
 
 /**
- *
+ * Push component on active stack
  * @param {*} layout RNN Component's layout
  * @param {Object} options Options for push action
- * @param {number} [options.tabIndex] Optional tab index component is pushing on another tab
- * @param {boolean} [options.dismissOverlays] Option for dismiss all overlays while pushing new screen
- * @param {boolean} [options.dismissAllModals] Option for dismiss all modals while pushing new screen
+ * @param {number} [options.bottomTabIndex] Push to specific bottom tabs tab with changing tab
+ * @param {number} [options.topTabIndex] Push to specific top tabs tab with changing tab
  * @returns {Object} Return push action for navigator middleware
  */
 export const push = (layout, options) => ({
@@ -41,4 +54,40 @@ export const push = (layout, options) => ({
     layout,
     options
   }
-})
+});
+
+/**
+ * Pop component from active stack
+ * @param {*} [mergeOptions] Merge options from RNN
+ * @returns {Object} Return pop action for navigator middleware
+ */
+export const pop = (mergeOptions) => ({type: middlewareActionTypes.pop, payload: {
+    mergeOptions
+  }});
+
+/**
+ * Pop to root of active stack
+ * @param {*} [mergeOptions] Merge options from RNN
+ * @returns {Object} Return popToRoot action for navigator middleware
+ */
+export const popToRoot = (mergeOptions) => ({type: middlewareActionTypes.popToRoot, payload: {
+    mergeOptions
+  }});
+
+/**
+ * Set root of active stack
+ * @param {*} [params] Array of children
+ * @returns {Object} Return setStackRoot action for navigator middleware
+ */
+export const setStackRoot = (params) => ({type: middlewareActionTypes.setStackRoot, payload: {
+    params
+  }});
+
+/**
+ * Dismiss last active modal
+ * @param {*} [mergeOptions] Merge options from RNN
+ * @returns {Object} Return dismissModal action for navigator middleware
+ */
+export const dismissLastModal = (mergeOptions) => ({type: middlewareActionTypes.dismissLastModal, payload: {
+    mergeOptions
+  }});

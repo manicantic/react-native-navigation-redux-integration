@@ -1,12 +1,17 @@
 import {
   rootSet,
   screenDisappeared,
-  componentPushed,
+  screenPushed,
   tabChanged,
   screenPopped,
   stackPoppedToRoot,
   poppedToScreen,
-  screenAppeared
+  screenAppeared,
+  stackRootSet,
+  tabChangedWithMergeOptions,
+  modalShown,
+  modalDismissed,
+  allModalsDismissed
 } from './actions';
 import {processRoot, processLayout} from './helpers';
 import {Events} from './constants';
@@ -28,14 +33,31 @@ const subscribeCommandListener = (navigator, store) => {
           }
         case Events.push:
           const componentId = params.componentId;
+          console.log(JSON.stringify(params.layout));
           const layout = processLayout(params.layout);
-          return store.dispatch(componentPushed({componentId, layout}));
+          return store.dispatch(screenPushed({componentId, layout}));
         case Events.pop:
           return store.dispatch(screenPopped({componentId: params.componentId}));
         case Events.popToRoot:
           return store.dispatch(stackPoppedToRoot({componentId: params.componentId}));
         case Events.popTo:
           return store.dispatch(poppedToScreen({componentId: params.componentId}));
+        case Events.setStackRoot:
+          return store.dispatch(stackRootSet(params));
+        case Events.mergeOptions:
+          {
+            if (params && params.options && params.options.bottomTabs && params.options.bottomTabs.currentTabIndex !== undefined) {
+              return store.dispatch(tabChangedWithMergeOptions({componentId: params.componentId, currentTabIndex: params.options.bottomTabs.currentTabIndex}));
+            }
+            return;
+          }
+        case Events.showModal:
+          const modalLayout = processLayout(params.layout);
+          return store.dispatch(modalShown(modalLayout));
+        case Events.dismissModal:
+          return store.dispatch(modalDismissed({componentId: params.componentId}));
+        case Events.dismissAllModals:
+          return store.dispatch(allModalsDismissed());
         default:
           return;
       }

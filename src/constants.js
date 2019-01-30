@@ -15,6 +15,8 @@ export const actionsPrefix = '@NAVIGATOR/';
 
 export const actionNameCreator = name => `${actionsPrefix}${name}`;
 
+export const isTabsType = type => type === LayoutType.BottomTabs || type === LayoutType.TopTabs;
+
 export const Events = {
   setRoot: 'setRoot',
   mergeOptions: 'mergeOptions',
