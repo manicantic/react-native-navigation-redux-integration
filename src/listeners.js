@@ -33,7 +33,6 @@ const subscribeCommandListener = (navigator, store) => {
           }
         case Events.push:
           const componentId = params.componentId;
-          console.log(JSON.stringify(params.layout));
           const layout = processLayout(params.layout);
           return store.dispatch(screenPushed({componentId, layout}));
         case Events.pop:
