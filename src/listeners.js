@@ -45,7 +45,7 @@ const subscribeCommandListener = (navigator, store) => {
           return store.dispatch(stackRootSet(params));
         case Events.mergeOptions:
           {
-            if (params && params.options && params.options.bottomTabs && params.options.bottomTabs.currentTabIndex !== undefined) {
+            if (params && params.options && params.options.bottomTabs && (params.options.bottomTabs.currentTabIndex !== undefined || params.options.topTabs.currentTabIndex !== undefined)) {
               return store.dispatch(tabChangedWithMergeOptions({componentId: params.componentId, currentTabIndex: params.options.bottomTabs.currentTabIndex}));
             }
             return;
