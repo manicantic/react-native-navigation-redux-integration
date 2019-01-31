@@ -1,5 +1,5 @@
 import {LayoutType} from './constants';
-import {isComponentOfType} from './helpers';
+import {isComponentOfType, getActiveChildrens} from './helpers';
 
 /**
  * Selector returning active screen's component id
@@ -78,4 +78,14 @@ export const getActiveSideMenuRightId = state => {
  */
 export const getActiveSideMenuRootId = state => {
   return getActiveIdForType(state, LayoutType.SideMenuRoot);
+}
+
+/**
+ * Selector returning active stack ( array of components )
+ * @param state redux store state
+ * @returns {Array<Object>} Array of components
+ */
+export const getActiveStackArray = state => {
+  const stackId = getActiveStackId(state);
+  return getActiveChildrens(state.navigation.root, stackId) || (state.modals.length && getActiveChildrens(state.modals[state.modals.length - 1], stackId));
 }

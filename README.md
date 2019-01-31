@@ -81,6 +81,8 @@ export const store = createStore(reducers,applyMiddleware(navigatorMiddleware));
 
 ### `getActiveSideMenuRootId(state)`
 
+### `getActiveStackArray(state)`
+
 
 
 ## Action creator

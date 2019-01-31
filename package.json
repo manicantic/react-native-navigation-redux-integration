@@ -5,12 +5,22 @@
   "main": "./index.js",
   "author": "Matija Anic-Antic (https://github.com/manicantic)",
   "license": "MIT",
+  "homepage": "https://github.com/manicantic/react-native-navigation-redux-integration",
   "repository": {
     "url": "git@github.com:manicantic/react-native-navigation-redux-integration.git",
     "type": "git"
   },
+  "scripts": {
+    "test": "jest"
+  },
   "dependencies": {
     "invariant": "^2.2.4"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.2.2",
+    "@babel/preset-env": "^7.3.1",
+    "babel-jest": "^24.0.0",
+    "jest": "^24.0.0"
   },
   "keywords": [
     "react-native",
@@ -18,7 +28,6 @@
     "react-native-navigation",
     "navigation"
   ],
-  "homepage": "https://github.com/manicantic/react-native-navigation-redux-integration",
   "peerDependencies": {
     "react-native-navigation": ">=2.0.0"
   }

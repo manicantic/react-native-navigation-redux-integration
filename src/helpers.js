@@ -260,3 +260,21 @@ export const getActiveScreenOfTab = (tree, tabId, tabIndex) => {
     }
   }
 }
+
+export const getActiveChildrens = (tree, componentId) => {
+  if (tree.children && tree.children.length) {
+    for (var i = 0; i < tree.children.length; i++) {
+      const id = getActiveChildrens(tree.children[i], componentId);
+      if (id) {
+        return id;
+      }
+    }
+  }
+  if (tree.id === componentId) {
+    if (tree.type === LayoutType.Stack) {
+      return [...tree.children]
+    } else if (isTabsType(tree.children)) {
+      return [...tree.children[tree.activeIndex]]
+    }
+  }
+}
