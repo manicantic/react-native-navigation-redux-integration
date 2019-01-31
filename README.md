@@ -1,4 +1,6 @@
 # react-native-navigation-redux-integration
+[![npm](https://img.shields.io/npm/v/react-native-navigation-redux-integration.svg?style=flat)](https://www.npmjs.com/package/react-native-navigation-redux-integration)
+[![dependencies](https://david-dm.org/manicantic/react-native-navigation-redux-integration/status.svg)](https://david-dm.org/manicantic/react-native-navigation-redux-integration)
 
  Redux integration for React Native Navigation v2. Keeps all you current navigation state in redux store.
 
@@ -6,8 +8,6 @@
 ### Prerequisites
 
 This integration works only with react-native-navigation v2 and with redux store configured in a project.
-[![npm](https://img.shields.io/npm/v/react-native-navigation-redux-integration.svg?style=flat)](https://www.npmjs.com/package/react-native-navigation-redux-integration)
-[![dependencies](https://david-dm.org/manicantic/react-native-navigation-redux-integration/status.svg)](https://david-dm.org/manicantic/react-native-navigation-redux-integration)
 
 ### Installing
 
