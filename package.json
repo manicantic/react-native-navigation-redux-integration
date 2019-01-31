@@ -15,7 +15,8 @@
   "keywords": [
     "react-native",
     "redux",
-    "react-native-navigation"
+    "react-native-navigation",
+    "navigation"
   ],
   "homepage": "https://github.com/manicantic/react-native-navigation-redux-integration",
   "peerDependencies": {
