@@ -22,8 +22,12 @@ export const processLayout = (incomeLayout) => {
 
 export const processRoot = incomeLayout => {
   const root = processLayout(incomeLayout.root);
-  const modals = [];
-  const overlays = [];
+  const modals = incomeLayout
+    .modals
+    .map(modal => processLayout(modal));
+  const overlays = incomeLayout
+    .overlays
+    .map(overlay => processLayout(overlay));;
   return {root, modals, overlays};
 }
 
