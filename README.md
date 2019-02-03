@@ -40,6 +40,7 @@ import {reducer as navigationReducer} from 'react-native-navigation-redux-integr
 .
 .
 .
+//This is root reducer
 export default combineReducers({
   .
   . / other reducers

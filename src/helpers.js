@@ -158,10 +158,8 @@ export const removeScreenIfNeeded = (tree, currentTree, componentId, parentTree)
           .children
           .pop();
         return tree;
-      } else if (parentTree.type === LayoutType.Stack || isTabsType(parentTree.type)) {
-        return removeScreenIfNeeded(tree, tree, parentTree.id);
       } else {
-        return tree;
+        return removeScreenIfNeeded(tree, tree, parentTree.id);
       }
     } else {
       return tree;
@@ -171,6 +169,11 @@ export const removeScreenIfNeeded = (tree, currentTree, componentId, parentTree)
     removeScreenIfNeeded(tree, currentTree.children[currentTree.activeIndex], componentId, currentTree);
   } else if (currentTree.type === LayoutType.Stack) {
     removeScreenIfNeeded(tree, currentTree.children[currentTree.children.length - 1], componentId, currentTree);
+  } else if (currentTree.type === LayoutType.SideMenuRoot) {
+    const sideMenuCenter = currentTree
+      .children
+      .find(c => c.type === LayoutType.SideMenuCenter);
+    removeScreenIfNeeded(tree, sideMenuCenter.children[sideMenuCenter.children.length - 1], componentId, sideMenuCenter);
   }
   return tree;
 }
