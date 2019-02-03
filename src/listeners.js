@@ -11,7 +11,9 @@ import {
   tabChangedWithMergeOptions,
   modalShown,
   modalDismissed,
-  allModalsDismissed
+  allModalsDismissed,
+  overlayShown,
+  overlayDismissed
 } from './actions';
 import {processRoot, processLayout} from './helpers';
 import {Events} from './constants';
@@ -57,6 +59,13 @@ const subscribeCommandListener = (navigator, store) => {
           return store.dispatch(modalDismissed({componentId: params.componentId}));
         case Events.dismissAllModals:
           return store.dispatch(allModalsDismissed());
+        case Events.showOverlay:
+          {
+            const overlayLayout = processLayout(params.layout);
+            return store.dispatch(overlayShown(overlayLayout));
+          }
+        case Events.dismissOverlay:
+          return store.dispatch(overlayDismissed({componentId: params.componentId}));
         default:
           return;
       }

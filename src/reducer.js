@@ -23,10 +23,14 @@ const reducer = (state = null, action) => {
         const newModals = state
           .modals
           .map(modal => pushToStack(Object.assign({}, modal), action.payload.componentId, action.payload.layout));
+        const newOverlays = state
+          .overlays
+          .map(overlay => pushToStack(Object.assign({}, overlay), action.payload.componentId, action.payload.layout));
         return {
           ...state,
           root: newRoot,
-          modals: newModals
+          modals: newModals,
+          overlays: newOverlays
         };
       }
     case actionTypes.screenPopped:
@@ -36,10 +40,14 @@ const reducer = (state = null, action) => {
         const newModals = state
           .modals
           .map(modal => popFromStack(Object.assign({}, modal), action.payload.componentId));
+        const newOverlays = state
+          .overlays
+          .map(overlay => popFromStack(Object.assign({}, overlay), action.payload.componentId));
         return {
           ...state,
           root: newRoot,
-          modals: newModals
+          modals: newModals,
+          overlays: newOverlays
         };
       }
     case actionTypes.stackPoppedToRoot:
@@ -49,10 +57,14 @@ const reducer = (state = null, action) => {
         const newModals = state
           .modals
           .map(modal => popToRoot(Object.assign({}, modal), action.payload.componentId));
+        const newOverlays = state
+          .overlays
+          .map(overlay => popToRoot(Object.assign({}, overlay), action.payload.componentId));
         return {
           ...state,
           root: newRoot,
-          modals: newModals
+          modals: newModals,
+          overlays: newOverlays
         };
       }
     case actionTypes.poppedToScreen:
@@ -62,10 +74,14 @@ const reducer = (state = null, action) => {
         const newModals = state
           .modals
           .map(modal => popToScreen(Object.assign({}, modal), action.payload.componentId));
+        const newOverlays = state
+          .overlays
+          .map(overlay => popToScreen(Object.assign({}, overlay), action.payload.componentId));
         return {
           ...state,
           root: newRoot,
-          modals: newModals
+          modals: newModals,
+          overlays: newOverlays
         };
       }
     case actionTypes.tabChanged:
@@ -76,10 +92,14 @@ const reducer = (state = null, action) => {
         const newModals = state
           .modals
           .map(modal => changeTabIndex(Object.assign({}, modal), activeScreenArray, action.payload.selectedTabIndex, action.payload.unselectedTabIndex));
+        const newOverlays = state
+          .overlays
+          .map(overlay => changeTabIndex(Object.assign({}, overlay), activeScreenArray, action.payload.selectedTabIndex, action.payload.unselectedTabIndex));
         return {
           ...state,
           root: newRoot,
-          modals: newModals
+          modals: newModals,
+          overlays: newOverlays
         };
       }
     case actionTypes.stackRootSet:
@@ -89,10 +109,14 @@ const reducer = (state = null, action) => {
         const newModals = state
           .modals
           .map(modal => (setStackRoot(Object.assign({}, modal), action.payload.componentId, action.payload.layout)));
+        const newOverlays = state
+          .overlays
+          .map(overlay => (setStackRoot(Object.assign({}, overlay), action.payload.componentId, action.payload.layout)));
         return {
           ...state,
           root: newRoot,
-          modals: newModals
+          modals: newModals,
+          overlays: newOverlays
         };
       }
     case actionTypes.screenDisappeared:
@@ -109,19 +133,31 @@ const reducer = (state = null, action) => {
             return removeScreenIfNeeded(modalCopy, modalCopy, action.payload.componentId)
           })
           .filter(modal => Object.keys(modal).length);
+        const newOverlays = state
+          .overlays
+          .map(overlay => {
+            overlayCopy = Object.assign({}, overlay)
+            return removeScreenIfNeeded(overlayCopy, overlayCopy, action.payload.componentId)
+          })
+          .filter(overlay => Object.keys(overlay).length);
         return {
           ...state,
           root: newRoot,
-          modals: newModals
+          modals: newModals,
+          overlays: newOverlays
         };
       }
     case actionTypes.screenAppeared:
       {
         const root = state.root;
         const modals = state.modals;
+        const overlays = state.overlays;
         let newActiveScreen = createActiveScreenArray(root, action.payload.componentId);
-        if (!newActiveScreen) {
+        if (!newActiveScreen && modals.length) {
           newActiveScreen = createActiveScreenArray(modals[modals.length - 1], action.payload.componentId);
+        }
+        if (!newActiveScreen && overlays.length) {
+          newActiveScreen = createActiveScreenArray(overlays[overlays.length - 1], action.payload.componentId);
         }
         return {
           ...state,
@@ -135,10 +171,14 @@ const reducer = (state = null, action) => {
         const newModals = state
           .modals
           .map(modal => (changeTabIndexToComponent(Object.assign({}, modal), action.payload.componentId, action.payload.currentTabIndex)));
+        const newOverlays = state
+          .overlays
+          .map(overlay => (changeTabIndexToComponent(Object.assign({}, overlay), action.payload.componentId, action.payload.currentTabIndex)));
         return {
           ...state,
           root: newRoot,
-          modals: newModals
+          modals: newModals,
+          overlays: newOverlays
         };
       }
     case actionTypes.modalShown:
@@ -167,6 +207,27 @@ const reducer = (state = null, action) => {
         return {
           ...state,
           modals: []
+        };
+      }
+    case actionTypes.overlayShown:
+      {
+        const overlays = state.overlays;
+        const newOverlays = [
+          ...overlays,
+          action.payload
+        ]
+        return {
+          ...state,
+          overlays: newOverlays
+        };
+      }
+    case actionTypes.overlayDismissed:
+      {
+        const overlays = state.overlays;
+        const newOverlays = overlays.filter(overlay => !hasComponentWithId(overlay, action.payload.componentId));
+        return {
+          ...state,
+          overlays: newOverlays
         };
       }
     default:

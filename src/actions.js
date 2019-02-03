@@ -13,7 +13,9 @@ export const actionTypes = {
   tabChangedWithMergeOptions: actionNameCreator('TAB_CHANGED_WITH_OPTIONS'),
   modalShown: actionNameCreator('MODAL_SHOWN'),
   modalDismissed: actionNameCreator('MODAL_DISMISSED'),
-  allModalsDismissed: actionNameCreator('ALL_MODALS_DISMISSED')
+  allModalsDismissed: actionNameCreator('ALL_MODALS_DISMISSED'),
+  overlayShown: actionNameCreator('OVERLAY_SHOWN'),
+  overlayDismissed: actionNameCreator('OVERLAY_DISMISSED')
 }
 
 export const middlewareActionTypes = {
@@ -39,6 +41,8 @@ export const tabChangedWithMergeOptions = payload => ({type: actionTypes.tabChan
 export const modalShown = payload => ({type: actionTypes.modalShown, payload});
 export const modalDismissed = payload => ({type: actionTypes.modalDismissed, payload});
 export const allModalsDismissed = payload => ({type: actionTypes.allModalsDismissed, payload});
+export const overlayShown = payload => ({type: actionTypes.overlayShown, payload});
+export const overlayDismissed = payload => ({type: actionTypes.overlayDismissed, payload});
 
 /**
  * Push component on active stack

@@ -1,5 +1,7 @@
 import {LayoutType, isTabsType} from './constants';
 
+export const objectClone = object => JSON.parse(JSON.stringify(object));
+
 export const processLayout = (incomeLayout) => {
   let layout = {};
   layout.type = incomeLayout.type;
@@ -23,48 +25,6 @@ export const processRoot = incomeLayout => {
   const modals = [];
   const overlays = [];
   return {root, modals, overlays};
-}
-
-export const findStackInTab = (tabs, componentId) => {
-  if (tabs.children && tabs.children.length) {
-    for (var i = 0; i < tabs.children.length; i++) 
-      if (tabs.children[i].type === LayoutType.Stack) {
-        for (var j = 0; j < tabs.children[i].children.length; j++) {
-          if (tabs.children[i].children[j].id === componentId) {
-            return i;
-          }
-        }
-      }
-    }
-}
-
-export const isLastScreenInStack = (stack, componentId) => {
-  if (stack.children && stack.children.length) {
-    if (stack.children[stack.children.length - 1].id === componentId) {
-      return true;
-    }
-  }
-}
-
-export const getLastComponentIdOfTab = (root, tabIndex) => {
-  if (root.type !== LayoutType.BottomTabs) {
-    return null;
-  }
-  return getLastComponentIdInStack(root.children[tabIndex]);
-}
-
-export const getLastComponentIdInStack = (stack) => {
-  if (stack.type !== LayoutType.Stack) {
-    return null;
-  }
-  return stack.children[stack.children.length - 1].id;
-}
-
-export const getTabsId = root => {
-  if (root.type !== LayoutType.BottomTabs) {
-    return null;
-  }
-  return root.id;
 }
 
 export const pushToStack = (tree, componentId, layout, stack) => {
@@ -193,28 +153,20 @@ export const removeScreenIfNeeded = (tree, currentTree, componentId, parentTree)
         parentTree
           .children
           .pop();
-        return;
+        return tree;
       } else if (parentTree.type === LayoutType.Stack || isTabsType(parentTree.type)) {
         return removeScreenIfNeeded(tree, tree, parentTree.id);
       } else {
-        return {delete: true};
+        return tree;
       }
     } else {
-      return {delete: true};
+      return tree;
     }
   }
   if (isTabsType(currentTree.type)) {
-    const isChanged = removeScreenIfNeeded(tree, currentTree.children[currentTree.activeIndex], componentId, currentTree);
-    if (isChanged && isChanged.delete) {
-      return {};
-    }
-    return currentTree;
+    removeScreenIfNeeded(tree, currentTree.children[currentTree.activeIndex], componentId, currentTree);
   } else if (currentTree.type === LayoutType.Stack) {
-    const isChanged = removeScreenIfNeeded(tree, currentTree.children[currentTree.children.length - 1], componentId, currentTree);
-    if (isChanged && isChanged.delete) {
-      return {};
-    }
-    return currentTree;
+    removeScreenIfNeeded(tree, currentTree.children[currentTree.children.length - 1], componentId, currentTree);
   }
   return tree;
 }
