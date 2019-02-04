@@ -1,0 +1,7 @@
+##Ignore test suits
+src/testStates/
+##And tests
+*.test.js
+
+## From .gitignore
+node_modules/

@@ -83,7 +83,7 @@ export const popToScreen = (tree, componentId, stack) => {
 
 export const setStackRoot = (tree, componentId, layoutArray, parentTree) => {
   if (tree.id === componentId && parentTree.type === LayoutType.Stack) {
-    parentTree.children = layoutArray.map(layout => processLayout(layout));
+    parentTree.children = layoutArray;
   }
   if (tree.children && tree.children.length) {
     for (var i = 0; i < tree.children.length; i++) 

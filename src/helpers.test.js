@@ -8,7 +8,9 @@ import {
   changeTabIndex,
   createActiveScreenArray,
   hasComponentWithId,
-  removeScreenIfNeeded
+  removeScreenIfNeeded,
+  isComponentOfType,
+  getActiveScreenOfTab
 } from './helpers';
 import {
   state,
@@ -21,6 +23,7 @@ import {
   changedTabState,
   changeTabParams
 } from './testStates/bottomTabsWithStack';
+import {LayoutType} from './constants';
 
 test('Getting active stack childrens', () => {
   expect(getActiveChildrens(state.root, 'Stack5')).toEqual(activeStackChildrens)
@@ -142,5 +145,38 @@ describe('Removing screen if it disappeared', () => {
     const root = objectClone(state.root);
     expect(removeScreenIfNeeded(root, root, 'Component15')).toMatchObject(state.root)
   });
+});
 
+describe('Testing layout types', () => {
+  test('', () => {
+    expect(isComponentOfType(state.root, 'Component17', LayoutType.Component)).toBeTruthy()
+  });
+
+  test('', () => {
+    expect(isComponentOfType(state.root, 'Component17', LayoutType.SideMenuCenter)).toBeFalsy()
+  });
+
+  test('', () => {
+    expect(isComponentOfType(state.root, 'Stack5', LayoutType.Stack)).toBeTruthy()
+  });
+
+  test('', () => {
+    expect(isComponentOfType(state.root, 'BottomTabs4', LayoutType.BottomTabs)).toBeTruthy()
+  });
+
+  test('', () => {
+    expect(isComponentOfType(state.root, 'BottomTabs4', LayoutType.Stack)).toBeFalsy()
+  });
+});
+
+describe('Testing layout types', () => {
+  test('', () => {
+    expect(getActiveScreenOfTab(state.root, 'BottomTabs4')).toBe('Component17')
+  });
+  test('', () => {
+    expect(getActiveScreenOfTab(state.root, 'BottomTabs4', 1)).toBe('Component10')
+  });
+  test('', () => {
+    expect(getActiveScreenOfTab(state.root, 'BottomTabs4', 2)).toBe('Component9')
+  });
 });
