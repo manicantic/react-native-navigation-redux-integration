@@ -11,7 +11,7 @@
     "type": "git"
   },
   "scripts": {
-    "test": "jest"
+    "test": "jest --coverage"
   },
   "dependencies": {
     "invariant": "^2.2.4"

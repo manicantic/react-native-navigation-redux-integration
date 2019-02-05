@@ -6,5 +6,8 @@ src/testStates/
 ##Ignore circleCI folder
 .circleci/
 
+##Ignore generated coverage
+coverage/
+
 ## From .gitignore
 node_modules/
