@@ -44,11 +44,13 @@ const subscribeCommandListener = (navigator, store) => {
         case Events.popTo:
           return store.dispatch(poppedToScreen({componentId: params.componentId}));
         case Events.setStackRoot:
-          const componentId = params.componentId;
-          const layout = params
-            .layout
-            .map(layout => processLayout(layout));
-          return store.dispatch(stackRootSet({componentId, layout}));
+          {
+            const componentId = params.componentId;
+            const layout = params
+              .layout
+              .map(layout => processLayout(layout));
+            return store.dispatch(stackRootSet({componentId, layout}));
+          }
         case Events.mergeOptions:
           {
             if (params && params.options && params.options.bottomTabs && (params.options.bottomTabs.currentTabIndex !== undefined || params.options.topTabs.currentTabIndex !== undefined)) {
