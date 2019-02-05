@@ -22,6 +22,10 @@ jobs:
           name: Run tests
           command: npm test
 
+      - run: 
+          name: Upload code coverage
+          command: curl -s https://codecov.io/bash
+          
       - save_cache:
           paths:
             - node_modules

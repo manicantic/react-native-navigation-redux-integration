@@ -3,5 +3,8 @@ src/testStates/
 ##And tests
 *.test.js
 
+##Ignore circleCI folder
+.circleci/
+
 ## From .gitignore
 node_modules/
