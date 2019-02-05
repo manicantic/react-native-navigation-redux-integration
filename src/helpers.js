@@ -198,9 +198,13 @@ export const getActiveComponentId = (root) => {
   }
   if (root.type === LayoutType.Stack) {
     return getActiveComponentId(root.children[root.children.length - 1]);
-  }
-  if (isTabsType(root.type)) {
+  } else if (isTabsType(root.type)) {
     return getActiveComponentId(root.children[root.activeIndex]);
+  } else if (root.type === LayoutType.SideMenuRoot) {
+    const sideMenuCenter = root
+      .children
+      .find(c => c.type === LayoutType.SideMenuCenter);
+    return getActiveComponentId(sideMenuCenter.children[sideMenuCenter.children.length - 1]);
   }
 }
 

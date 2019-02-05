@@ -10,7 +10,9 @@ import {
   hasComponentWithId,
   removeScreenIfNeeded,
   isComponentOfType,
-  getActiveScreenOfTab
+  getActiveScreenOfTab,
+  getActiveComponentId,
+  setStackRoot
 } from './helpers';
 import {
   state,
@@ -21,8 +23,11 @@ import {
   poppedToRootState,
   poppedToComponentState,
   changedTabState,
-  changeTabParams
+  changeTabParams,
+  stackToSetForRoot,
+  setStackRootState
 } from './testStates/bottomTabsWithStack';
+import {sideMenuState, sideMenuSetStackRootState, sideMenuStackToSetForRoot} from './testStates/sideMenuWithTabs';
 import {LayoutType} from './constants';
 
 test('Getting active stack childrens', () => {
@@ -169,7 +174,7 @@ describe('Testing layout types', () => {
   });
 });
 
-describe('Testing layout types', () => {
+describe('Testing getting active screen of tab', () => {
   test('', () => {
     expect(getActiveScreenOfTab(state.root, 'BottomTabs4')).toBe('Component17')
   });
@@ -178,5 +183,26 @@ describe('Testing layout types', () => {
   });
   test('', () => {
     expect(getActiveScreenOfTab(state.root, 'BottomTabs4', 2)).toBe('Component9')
+  });
+});
+
+describe('Testing getting active component id', () => {
+  test('with side menu layout', () => {
+    expect(getActiveComponentId(sideMenuState.root)).toBe('Component21')
+  });
+  test('with bottom tabs layout', () => {
+    expect(getActiveComponentId(state.root)).toBe('Component17')
+  });
+});
+
+describe('Setting stack root', () => {
+  test('with side menu layout', () => {
+    const root = objectClone(sideMenuState.root);
+    expect(setStackRoot(root, 'Component21', sideMenuStackToSetForRoot)).toMatchObject(sideMenuSetStackRootState.root)
+  });
+
+  test('with bottom tabs layout', () => {
+    const root = objectClone(state.root);
+    expect(setStackRoot(root, 'Component17', stackToSetForRoot)).toMatchObject(setStackRootState.root)
   });
 });
