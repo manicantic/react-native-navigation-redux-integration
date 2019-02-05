@@ -11,15 +11,21 @@
     "type": "git"
   },
   "scripts": {
-    "test": "jest --coverage"
+    "test": "jest && codecov",
+    "testLocal": "jest"
   },
   "dependencies": {
     "invariant": "^2.2.4"
+  },
+  "jest": {
+  "coverageDirectory": "./coverage/",
+  "collectCoverage": true
   },
   "devDependencies": {
     "@babel/core": "^7.2.2",
     "@babel/preset-env": "^7.3.1",
     "babel-jest": "^24.0.0",
+    "codecov": "^3.1.0",
     "jest": "^24.0.0"
   },
   "keywords": [
