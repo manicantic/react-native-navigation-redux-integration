@@ -22,7 +22,7 @@ yarn add react-native-navigation-redux-integration
 
 Next, adding initialization for library :
 
-```
+```javascript
 import {Navigation} from 'react-native-navigation';
 import {initNavigatorListeners} from 'react-native-navigation-redux-integration';
 import {store} from '{your path to store here}';
@@ -37,7 +37,7 @@ register RNN screen and setRoot here
 
 Adding navigation reducer :
 
-```
+```javascript
 import {reducer as navigationReducer} from 'react-native-navigation-redux-integration';
 .
 .
@@ -45,7 +45,7 @@ import {reducer as navigationReducer} from 'react-native-navigation-redux-integr
 //This is root reducer
 export default combineReducers({
   .
-  . / other reducers
+  . // other reducers
   .,
   navigation: navigationReducer
 })
@@ -55,7 +55,7 @@ export default combineReducers({
 
 Adding react-native-navigation-redux-integration for navigating with dispatcing store actions : 
 
-```
+```javascript
 import {navigatorMiddleware} from 'react-native-navigation-redux-integration';
 .
 .
