@@ -185,7 +185,7 @@ export const isComponentOfType = (tree, componentId, type) => {
   if (tree.children && tree.children.length) {
     for (var i = 0; i < tree.children.length; i++) {
       const isType = isComponentOfType(tree.children[i], componentId, type);
-      if (isType) {
+      if (isType !== undefined) {
         return isType;
       }
     }
@@ -238,6 +238,23 @@ export const getActiveChildrens = (tree, componentId) => {
       return [...tree.children]
     } else if (isTabsType(tree.children)) {
       return [...tree.children[tree.activeIndex]]
+    }
+  }
+}
+
+export const getSideMenuChildrenId = (tree, sideMenuRootId, type) => {
+  if (tree.id === sideMenuRootId) {
+    const sideMenuChildren = tree
+      .children
+      .find(c => c.type === type);
+    return sideMenuChildren && sideMenuChildren.id;
+  }
+  if (tree.children && tree.children.length) {
+    for (var i = 0; i < tree.children.length; i++) {
+      const id = getSideMenuChildrenId(tree.children[i], componentId, type);
+      if (id) {
+        return id;
+      }
     }
   }
 }

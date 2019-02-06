@@ -1,5 +1,5 @@
 import {LayoutType} from './constants';
-import {isComponentOfType, getActiveChildrens} from './helpers';
+import {isComponentOfType, getActiveChildrens, getSideMenuChildrenId} from './helpers';
 
 /**
  * Selector returning active screen's component id
@@ -13,7 +13,16 @@ export const getActiveScreenId = (state) => {
 
 const getActiveIdForType = (state, type) => {
   const activeScreenArray = state.navigation.activeScreenArray;
-  return activeScreenArray.find(component => isComponentOfType(state.navigation.root, component, type)) || activeScreenArray.find(component => isComponentOfType(state.navigation.modals, component, type));
+  return activeScreenArray.find(component => isComponentOfType(state.navigation.root, component, type)) || (state.navigation.modals.length
+    ? activeScreenArray.find(component => isComponentOfType(state.navigation.modals, component, type))
+    : undefined);
+}
+
+const getActiveSideMenuSides = (state, type) => {
+  const rootId = getActiveIdForType(state, LayoutType.SideMenuRoot);
+  return rootId && (getSideMenuChildrenId(state.navigation.root, rootId, type) || (state.navigation.modals.length
+    ? getSideMenuChildrenId(state.navigation.root, rootId, type)
+    : undefined));
 }
 
 /**
@@ -59,7 +68,7 @@ export const getActiveSideMenuCenterId = state => {
  * @returns {string} Active side menu left id
  */
 export const getActiveSideMenuLeftId = state => {
-  return getActiveIdForType(state, LayoutType.SideMenuLeft);
+  return getActiveSideMenuSides(state, LayoutType.SideMenuLeft);
 }
 
 /**
@@ -68,7 +77,7 @@ export const getActiveSideMenuLeftId = state => {
  * @returns {string} Active side menu right id
  */
 export const getActiveSideMenuRightId = state => {
-  return getActiveIdForType(state, LayoutType.SideMenuRight);
+  return getActiveSideMenuSides(state, LayoutType.SideMenuRight);
 }
 
 /**
@@ -87,5 +96,7 @@ export const getActiveSideMenuRootId = state => {
  */
 export const getActiveStackArray = state => {
   const stackId = getActiveStackId(state);
-  return getActiveChildrens(state.navigation.root, stackId) || (state.modals.length && getActiveChildrens(state.modals[state.modals.length - 1], stackId));
+  return getActiveChildrens(state.navigation.root, stackId) || (state.navigation.modals.length
+    ? getActiveChildrens(state.navigation.modals[state.navigation.modals.length - 1], stackId)
+    : undefined);
 }

@@ -12,7 +12,8 @@ import {
   isComponentOfType,
   getActiveScreenOfTab,
   getActiveComponentId,
-  setStackRoot
+  setStackRoot,
+  getSideMenuChildrenId
 } from './helpers';
 import {
   state,
@@ -204,5 +205,15 @@ describe('Setting stack root', () => {
   test('with bottom tabs layout', () => {
     const root = objectClone(state.root);
     expect(setStackRoot(root, 'Component17', stackToSetForRoot)).toMatchObject(setStackRootState.root)
+  });
+});
+
+describe('Getting side menu ', () => {
+  test('left side id', () => {
+    expect(getSideMenuChildrenId(sideMenuState.root, 'SideMenuRoot4', LayoutType.SideMenuLeft)).toBe('SideMenuLeft5')
+  });
+
+  test('right side id', () => {
+    expect(getSideMenuChildrenId(sideMenuState.root, 'SideMenuRoot4', LayoutType.SideMenuRight)).toBe('SideMenuRight14')
   });
 });
