@@ -41,22 +41,22 @@ export const navigatorMiddleware = store => next => action => {
         } else {
           activeScreenId = getActiveScreenId(state);
         }
-        navigator.push(activeScreenId, layout);
+        return navigator.push(activeScreenId, layout);
       }
     case middlewareActionTypes.pop:
       {
         const activeScreenId = getActiveScreenId(state);
-        navigator.pop(activeScreenId, action.payload.mergeOptions);
+        return navigator.pop(activeScreenId, action.payload.mergeOptions);
       }
     case middlewareActionTypes.popToRoot:
       {
         const activeScreenId = getActiveScreenId(state);
-        navigator.popToRoot(activeScreenId, action.payload.mergeOptions);
+        return navigator.popToRoot(activeScreenId, action.payload.mergeOptions);
       }
     case middlewareActionTypes.setStackRoot:
       {
         const activeScreenId = getActiveScreenId(state);
-        navigator.setStackRoot(activeScreenId, action.payload.params);
+        return navigator.setStackRoot(activeScreenId, action.payload.params);
       }
     case middlewareActionTypes.dismissLastModal:
       {
@@ -64,7 +64,7 @@ export const navigatorMiddleware = store => next => action => {
         if (!modals || !modals.length) 
           return;
         const activeScreenId = getActiveComponentId(modals[modals.length - 1]);
-        navigator.dismissModal(activeScreenId, action.payload.mergeOptions);
+        return navigator.dismissModal(activeScreenId, action.payload.mergeOptions);
       }
     default:
       return next(action);

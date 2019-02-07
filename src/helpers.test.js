@@ -39,7 +39,6 @@ describe('Pushing new component to stack', () => {
   test('with right id', () => {
     expect(pushToStack(objectClone(state.root), 'Component17', componentToPush)).toMatchObject(pushedState.root)
   });
-
   test('with wrong id', () => {
     expect(pushToStack(objectClone(state.root), 'Components18', componentToPush)).toMatchObject(state.root)
   });
