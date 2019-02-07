@@ -31,7 +31,7 @@ initNavigatorListeners(Navigation, store);
 .
 .
 .
-register RNN screen and setRoot here
+//register RNN screen and setRoot here
 
 ```
 
@@ -53,7 +53,7 @@ export default combineReducers({
 
 ```
 
-Adding react-native-navigation-redux-integration for navigating with dispatcing store actions : 
+Adding react-native-navigation-redux-integration for navigating with dispatching store actions : 
 
 ```javascript
 import {navigatorMiddleware} from 'react-native-navigation-redux-integration';
@@ -90,7 +90,7 @@ export const store = createStore(reducers,applyMiddleware(navigatorMiddleware));
 
 ## Action creator
 
-Actions are dispatch and handled by navigaton middleware.
+Actions are dispatch and handled by navigation middleware.
 
 ### `push(layout: RNN Layout, [options: { [bottomTabIndex]:number, [topTabIndex]:number }])`
 
@@ -104,7 +104,7 @@ Actions are dispatch and handled by navigaton middleware.
 
 > Pop active stack to root
 
-### `setStackRoot(params: RNN params for setStackRoot methode)`
+### `setStackRoot(params: RNN params for setStackRoot method)`
 
 > Set root to active stack
 
