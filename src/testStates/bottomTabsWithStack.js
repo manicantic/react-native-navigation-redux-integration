@@ -375,7 +375,7 @@ export const poppedToComponentState = {
   },
   modals: [],
   overlays: [],
-  activeScreenArray: ['Component17', 'Stack5', 'BottomTabs4']
+  activeScreenArray: ['Component11', 'Stack5', 'BottomTabs4']
 };
 export const activeStackChildrens = [
   {
@@ -456,7 +456,7 @@ export const changedTabState = {
   },
   modals: [],
   overlays: [],
-  activeScreenArray: ['Component8', 'Stack7', 'BottomTabs4']
+  activeScreenArray: ['Component10', 'Stack7', 'BottomTabs4']
 };
 
 export const changeTabParams = [state.activeScreenArray, 1, 0];

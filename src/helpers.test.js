@@ -13,7 +13,10 @@ import {
   getActiveScreenOfTab,
   getActiveComponentId,
   setStackRoot,
-  getSideMenuChildrenId
+  getSideMenuChildrenId,
+  processRoot,
+  changeTabIndexToComponent,
+  processLayout
 } from './helpers';
 import {
   state,
@@ -28,7 +31,7 @@ import {
   stackToSetForRoot,
   setStackRootState
 } from './testStates/bottomTabsWithStack';
-import {sideMenuState, sideMenuSetStackRootState, sideMenuStackToSetForRoot} from './testStates/sideMenuWithTabs';
+import {sideMenuState, sideMenuSetStackRootState, sideMenuStackToSetForRoot, setRootPayload, processedLayout} from './testStates/sideMenuWithTabs';
 import {LayoutType} from './constants';
 
 test('Getting active stack childrens', () => {
@@ -86,6 +89,10 @@ test('Changing active tab', () => {
   expect(changeTabIndex(objectClone(state.root), ...changeTabParams)).toMatchObject(changedTabState.root)
 });
 
+test('Changing active tab with merge options', () => {
+  expect(changeTabIndexToComponent(objectClone(state.root), 'BottomTabs4', 1)).toMatchObject(changedTabState.root)
+});
+
 describe('Creating active screen array', () => {
   test('', () => {
     expect(createActiveScreenArray(objectClone(state.root), 'Component17')).toEqual(state.activeScreenArray)
@@ -104,7 +111,7 @@ describe('Creating active screen array', () => {
   });
 
   test('', () => {
-    expect(createActiveScreenArray(objectClone(changedTabState.root), 'Component8')).toEqual(changedTabState.activeScreenArray)
+    expect(createActiveScreenArray(objectClone(changedTabState.root), 'Component10')).toEqual(changedTabState.activeScreenArray)
   });
 });
 
@@ -214,5 +221,16 @@ describe('Getting side menu ', () => {
 
   test('right side id', () => {
     expect(getSideMenuChildrenId(sideMenuState.root, 'SideMenuRoot4', LayoutType.SideMenuRight)).toBe('SideMenuRight14')
+  });
+});
+
+describe('Processing layout for setRoot action', () => {
+  test('left side id', () => {
+    const layout = processRoot(setRootPayload);
+    const rootLayout = processLayout(setRootPayload.root);
+    expect(layout.root).toMatchObject(processedLayout.root);
+    expect(rootLayout).toMatchObject(processedLayout.root);
+    expect(layout.modals).toEqual(processedLayout.modals);
+    expect(layout.root).toEqual(processedLayout.root);
   });
 });
