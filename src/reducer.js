@@ -126,17 +126,20 @@ const reducer = (state = null, action) => {
         const newRoot = state.modals.length
           ? root
           : removeScreenIfNeeded(rootCopy, rootCopy, action.payload.componentId);
+        const modalsLength = state.modals.length;
         const newModals = state
           .modals
-          .map(modal => {
-            modalCopy = Object.assign({}, modal)
-            return removeScreenIfNeeded(modalCopy, modalCopy, action.payload.componentId)
+          .map((modal, index) => {
+            const modalCopy = Object.assign({}, modal);
+            return index + 1 === modalsLength
+              ? removeScreenIfNeeded(modalCopy, modalCopy, action.payload.componentId)
+              : modalCopy;
           })
           .filter(modal => Object.keys(modal).length);
         const newOverlays = state
           .overlays
           .map(overlay => {
-            overlayCopy = Object.assign({}, overlay)
+            const overlayCopy = Object.assign({}, overlay)
             return removeScreenIfNeeded(overlayCopy, overlayCopy, action.payload.componentId)
           })
           .filter(overlay => Object.keys(overlay).length);
@@ -154,7 +157,11 @@ const reducer = (state = null, action) => {
         const overlays = state.overlays;
         let newActiveScreen = createActiveScreenArray(root, action.payload.componentId);
         if (!newActiveScreen && modals.length) {
-          newActiveScreen = createActiveScreenArray(modals[modals.length - 1], action.payload.componentId);
+          let i = 0;
+          while (!newActiveScreen && state.modals[i]) {
+            newActiveScreen = createActiveScreenArray(modals[i], action.payload.componentId);
+            i++;
+          }
         }
         if (!newActiveScreen && overlays.length) {
           newActiveScreen = createActiveScreenArray(overlays[overlays.length - 1], action.payload.componentId);
