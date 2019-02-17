@@ -9,7 +9,8 @@ import {
   stackRootSet,
   tabChangedWithMergeOptions,
   tabChanged,
-  modalShown
+  modalShown,
+  modalDismissed
 } from './actions';
 import {
   state,
@@ -23,7 +24,7 @@ import {
   stackToSetForRoot,
   changedTabState
 } from './testStates/bottomTabsWithStack';
-import {stateWithModals, showModalLayout, showModalState} from './testStates/twoActiveModals';
+import {stateWithModals, showModalLayout, showModalState, stateWithDismissedModals} from './testStates/twoActiveModals';
 import {
   sideMenuState,
   sideMenuComponentToPush,
@@ -156,18 +157,18 @@ describe('Testing reducer handling tabChangedWithMergeOptions, screenAppeared an
 describe('Testing reducer handling tabChanged, screenAppeared and screenDisappeared', () => {
   test('for tabbed app', () => {
     const clonedState = objectClone(state);
-    const popped = reducer(clonedState, tabChanged({selectedTabIndex: 1, unselectedTabIndex: 0}));
-    const appeared = reducer(popped, screenAppeared({componentId: 'Component10'}));
+    const changedTab = reducer(clonedState, tabChanged({selectedTabIndex: 1, unselectedTabIndex: 0}));
+    const appeared = reducer(changedTab, screenAppeared({componentId: 'Component10'}));
     const final = reducer(appeared, screenDisappeared({componentId: 'Component17'}));
     expect(final).toMatchObject(changedTabState)
   });
-  /**test('for side menu app', () => {
-const clonedState = objectClone(sideMenuState);
-const pushed = reducer(clonedState, stackPoppedToRoot({componentId: 'Component21'}));
-const appeared = reducer(pushed, screenAppeared({componentId: 'Component19'}));
-const final = reducer(appeared, screenDisappeared({componentId: 'Component21'}));
-expect(final).toMatchObject(sideMenuPoppedState)
-}); */
+  test('for side menu app', () => {
+    const clonedState = objectClone(sideMenuState);
+    const changedTab = reducer(clonedState, tabChanged({selectedTabIndex: 0, unselectedTabIndex: 1}));
+    const appeared = reducer(changedTab, screenAppeared({componentId: 'Component9'}));
+    const final = reducer(appeared, screenDisappeared({componentId: 'Component21'}));
+    expect(final).toMatchObject(sideMenuChangedTabState)
+  });
 });
 
 describe('Testing reducer handling modalShown, screenAppeared and screenDisappeared', () => {
@@ -186,5 +187,15 @@ describe('Testing reducer handling screenDisappeared for last children in stack 
     const popped = reducer(clonedState, screenAppeared({componentId: 'Component56'}));
     const final = reducer(popped, screenDisappeared({componentId: 'Component58'}));
     expect(final).toMatchObject(stateWithModals)
+  });
+});
+
+describe('Testing reducer handling modalDismissed, screenAppeared and screenDisappeared', () => {
+  test('for two active modal app', () => {
+    const clonedState = objectClone(stateWithModals);
+    const modalDismissedState = reducer(clonedState, modalDismissed({componentId: 'Component56'}))
+    const appeared = reducer(modalDismissedState, screenAppeared({componentId: 'Component52'}));
+    const final = reducer(appeared, screenDisappeared({componentId: 'Component56'}));
+    expect(final).toMatchObject(stateWithDismissedModals)
   });
 });
