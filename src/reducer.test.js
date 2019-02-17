@@ -24,7 +24,16 @@ import {
   changedTabState
 } from './testStates/bottomTabsWithStack';
 import {stateWithModals, showModalLayout, showModalState} from './testStates/twoActiveModals';
-import {sideMenuState, sideMenuComponentToPush, sideMenuPushedState, sideMenuPoppedState} from './testStates/sideMenuWithTabs';
+import {
+  sideMenuState,
+  sideMenuComponentToPush,
+  sideMenuPushedState,
+  sideMenuPoppedState,
+  sideMenuSetStackRootState,
+  sideMenuStackToSetForRoot,
+  sideMenuPoppedToScreenState,
+  sideMenuChangedTabState
+} from './testStates/sideMenuWithTabs';
 import {objectClone} from './helpers';
 
 describe('Testing reducer handling screenDisappeared', () => {
@@ -82,13 +91,13 @@ describe('Testing reducer handling screenPoppedToRoot, screenAppeared and screen
     const final = reducer(appeared, screenDisappeared({componentId: 'Component17'}));
     expect(final).toMatchObject(poppedToRootState)
   });
-  /**test('for side menu app', () => {
+  test('for side menu app', () => {
     const clonedState = objectClone(sideMenuState);
     const pushed = reducer(clonedState, stackPoppedToRoot({componentId: 'Component21'}));
-    const appeared = reducer(pushed, screenAppeared({componentId: 'Component19'}));
+    const appeared = reducer(pushed, screenAppeared({componentId: 'Component11'}));
     const final = reducer(appeared, screenDisappeared({componentId: 'Component21'}));
-    expect(final).toMatchObject(sideMenuPoppedState)
-  }); */
+    expect(final).toMatchObject(sideMenuPoppedToScreenState)
+  });
 });
 
 describe('Testing reducer handling poppedToScreen, screenAppeared and screenDisappeared', () => {
@@ -99,13 +108,13 @@ describe('Testing reducer handling poppedToScreen, screenAppeared and screenDisa
     const final = reducer(appeared, screenDisappeared({componentId: 'Component17'}));
     expect(final).toMatchObject(poppedToComponentState)
   });
-  /**test('for side menu app', () => {
+  test('for side menu app', () => {
     const clonedState = objectClone(sideMenuState);
-    const pushed = reducer(clonedState, stackPoppedToRoot({componentId: 'Component21'}));
-    const appeared = reducer(pushed, screenAppeared({componentId: 'Component19'}));
+    const pushed = reducer(clonedState, poppedToScreen({componentId: 'Component11'}));
+    const appeared = reducer(pushed, screenAppeared({componentId: 'Component11'}));
     const final = reducer(appeared, screenDisappeared({componentId: 'Component21'}));
-    expect(final).toMatchObject(sideMenuPoppedState)
-  }); */
+    expect(final).toMatchObject(sideMenuPoppedToScreenState)
+  });
 });
 
 describe('Testing reducer handling stackRootSet, screenAppeared and screenDisappeared', () => {
@@ -116,13 +125,13 @@ describe('Testing reducer handling stackRootSet, screenAppeared and screenDisapp
     const final = reducer(appeared, screenDisappeared({componentId: 'Component17'}));
     expect(final).toMatchObject(setStackRootState)
   });
-  /**test('for side menu app', () => {
+  test('for side menu app', () => {
     const clonedState = objectClone(sideMenuState);
-    const pushed = reducer(clonedState, stackPoppedToRoot({componentId: 'Component21'}));
-    const appeared = reducer(pushed, screenAppeared({componentId: 'Component19'}));
+    const setStackRoot = reducer(clonedState, stackRootSet({componentId: 'Component21', layout: sideMenuStackToSetForRoot}));
+    const appeared = reducer(setStackRoot, screenAppeared({componentId: 'Component34'}));
     const final = reducer(appeared, screenDisappeared({componentId: 'Component21'}));
-    expect(final).toMatchObject(sideMenuPoppedState)
-  }); */
+    expect(final).toMatchObject(sideMenuSetStackRootState)
+  });
 });
 
 describe('Testing reducer handling tabChangedWithMergeOptions, screenAppeared and screenDi' +
@@ -130,18 +139,18 @@ describe('Testing reducer handling tabChangedWithMergeOptions, screenAppeared an
 () => {
   test('for tabbed app', () => {
     const clonedState = objectClone(state);
-    const popped = reducer(clonedState, tabChangedWithMergeOptions({componentId: 'BottomTabs4', currentTabIndex: 1}));
-    const appeared = reducer(popped, screenAppeared({componentId: 'Component10'}));
+    const changedTab = reducer(clonedState, tabChangedWithMergeOptions({componentId: 'BottomTabs4', currentTabIndex: 1}));
+    const appeared = reducer(changedTab, screenAppeared({componentId: 'Component10'}));
     const final = reducer(appeared, screenDisappeared({componentId: 'Component17'}));
     expect(final).toMatchObject(changedTabState)
   });
-  /**test('for side menu app', () => {
+  test('for side menu app', () => {
     const clonedState = objectClone(sideMenuState);
-    const pushed = reducer(clonedState, stackPoppedToRoot({componentId: 'Component21'}));
-    const appeared = reducer(pushed, screenAppeared({componentId: 'Component19'}));
+    const changedTab = reducer(clonedState, tabChangedWithMergeOptions({componentId: 'BottomTabs8', currentTabIndex: 0}));
+    const appeared = reducer(changedTab, screenAppeared({componentId: 'Component9'}));
     const final = reducer(appeared, screenDisappeared({componentId: 'Component21'}));
-    expect(final).toMatchObject(sideMenuPoppedState)
-  }); */
+    expect(final).toMatchObject(sideMenuChangedTabState)
+  });
 });
 
 describe('Testing reducer handling tabChanged, screenAppeared and screenDisappeared', () => {
