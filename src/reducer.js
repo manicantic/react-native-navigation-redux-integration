@@ -9,7 +9,8 @@ import {
   setStackRoot,
   changeTabIndexToComponent,
   hasComponentWithId,
-  removeScreenIfNeeded
+  removeScreenIfNeeded,
+  getActiveComponentId
 } from './helpers';
 
 const reducer = (state = null, action) => {
@@ -231,10 +232,24 @@ const reducer = (state = null, action) => {
     case actionTypes.overlayDismissed:
       {
         const overlays = state.overlays;
+        const modals = state.modals;
         const newOverlays = overlays.filter(overlay => !hasComponentWithId(overlay, action.payload.componentId));
+        let newActiveComponentId = null;
+        let activeScreenArray = null;
+        if (newOverlays.length) {
+          newActiveComponentId = getActiveComponentId(newOverlays[newOverlays.length - 1]);
+          activeScreenArray = createActiveScreenArray(newOverlays[newOverlays.length - 1], newActiveComponentId);
+        } else if (modals.length) {
+          newActiveComponentId = getActiveComponentId(modals[modals.length - 1]);
+          activeScreenArray = createActiveScreenArray(modals[modals.length - 1], newActiveComponentId);
+        } else {
+          newActiveComponentId = getActiveComponentId(state.root);
+          activeScreenArray = createActiveScreenArray(state.root, newActiveComponentId);
+        }
         return {
           ...state,
-          overlays: newOverlays
+          overlays: newOverlays,
+          activeScreenArray
         };
       }
     default:

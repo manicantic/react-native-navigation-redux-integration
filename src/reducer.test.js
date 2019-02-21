@@ -10,7 +10,8 @@ import {
   tabChangedWithMergeOptions,
   tabChanged,
   modalShown,
-  modalDismissed
+  modalDismissed,
+  overlayDismissed
 } from './actions';
 import {
   state,
@@ -35,6 +36,7 @@ import {
   sideMenuPoppedToScreenState,
   sideMenuChangedTabState
 } from './testStates/sideMenuWithTabs';
+import {bottomTabsWithStateAndOneOverlayState} from './testStates/bottomTabsWithActiveOverlay';
 import {objectClone} from './helpers';
 
 describe('Testing reducer handling screenDisappeared', () => {
@@ -197,5 +199,13 @@ describe('Testing reducer handling modalDismissed, screenAppeared and screenDisa
     const appeared = reducer(modalDismissedState, screenAppeared({componentId: 'Component52'}));
     const final = reducer(appeared, screenDisappeared({componentId: 'Component56'}));
     expect(final).toMatchObject(stateWithDismissedModals)
+  });
+});
+
+describe('Testing reducer handling overlayDismissed without screenAppeared', () => {
+  test('for bottom tabs with active one overlay', () => {
+    const clonedState = objectClone(bottomTabsWithStateAndOneOverlayState);
+    const overlayDismissedState = reducer(clonedState, overlayDismissed({componentId: 'Component19'}))
+    expect(overlayDismissedState).toMatchObject(state);
   });
 });
