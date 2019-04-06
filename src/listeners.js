@@ -53,8 +53,11 @@ const subscribeCommandListener = (navigator, store) => {
           }
         case Events.mergeOptions:
           {
-            if (params && params.options && params.options.bottomTabs && (params.options.bottomTabs.currentTabIndex !== undefined || params.options.topTabs.currentTabIndex !== undefined)) {
+            if (params && params.options && params.options.bottomTabs && params.options.bottomTabs.currentTabIndex !== undefined) {
               return store.dispatch(tabChangedWithMergeOptions({componentId: params.componentId, currentTabIndex: params.options.bottomTabs.currentTabIndex}));
+            }
+            if (params && params.options && params.options.topTabs && params.options.topTabs.currentTabIndex !== undefined) {
+              return store.dispatch(tabChangedWithMergeOptions({componentId: params.componentId, currentTabIndex: params.options.topTabs.currentTabIndex}));
             }
             return;
           }
