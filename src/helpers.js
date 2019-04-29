@@ -1,4 +1,4 @@
-import {LayoutType, isTabsType} from './constants';
+import { LayoutType, isTabsType } from './constants';
 
 export const objectClone = object => JSON.parse(JSON.stringify(object));
 
@@ -6,15 +6,24 @@ export const processLayout = (incomeLayout) => {
   let layout = {};
   layout.type = incomeLayout.type;
   layout.id = incomeLayout.id;
-  if (incomeLayout.type === LayoutType.BottomTabs) {
+  const data = incomeLayout.data;
+  if (isTabsType(incomeLayout.type)) {
     layout.activeIndex = 0;
+    if (data && data.options) {
+      if (data.options.bottomTabs !== undefined && data.options.bottomTabs.currentTabIndex !== undefined) {
+        layout.activeIndex = data.options.bottomTabs.currentTabIndex;
+      }
+      if (data.options.topTabs !== undefined && data.options.topTabs.currentTabIndex !== undefined) {
+        layout.activeIndex = data.options.topTabs.currentTabIndex;
+      }
+    }
   }
   if (incomeLayout.data && incomeLayout.data.name) {
     layout.name = incomeLayout.data.name;
   }
   if (incomeLayout.children && incomeLayout.children.length) {
     layout.children = [];
-    for (var i = 0; i < incomeLayout.children.length; i++) 
+    for (var i = 0; i < incomeLayout.children.length; i++)
       layout.children[i] = processLayout(incomeLayout.children[i])
   }
   return layout;
@@ -28,7 +37,7 @@ export const processRoot = incomeLayout => {
   const overlays = incomeLayout
     .overlays
     .map(overlay => processLayout(overlay));;
-  return {root, modals, overlays};
+  return { root, modals, overlays };
 }
 
 export const pushToStack = (tree, componentId, layout, stack) => {
@@ -37,9 +46,9 @@ export const pushToStack = (tree, componentId, layout, stack) => {
     return;
   }
   if (tree.children && tree.children.length) {
-    for (var i = 0; i < tree.children.length; i++) 
+    for (var i = 0; i < tree.children.length; i++)
       pushToStack(tree.children[i], componentId, layout, tree.children);
-    }
+  }
   return tree;
 }
 
@@ -49,9 +58,9 @@ export const popFromStack = (tree, componentId, stack) => {
     return;
   }
   if (tree.children && tree.children.length) {
-    for (var i = 0; i < tree.children.length; i++) 
+    for (var i = 0; i < tree.children.length; i++)
       popFromStack(tree.children[i], componentId, tree.children);
-    }
+  }
   return tree;
 }
 
@@ -62,9 +71,9 @@ export const popToRoot = (tree, componentId, stack) => {
     }
   }
   if (tree.children && tree.children.length) {
-    for (var i = 0; i < tree.children.length; i++) 
+    for (var i = 0; i < tree.children.length; i++)
       popToRoot(tree.children[i], componentId, tree.children);
-    }
+  }
   return tree;
 }
 
@@ -75,9 +84,9 @@ export const popToScreen = (tree, componentId, stack) => {
     }
   }
   if (tree.children && tree.children.length) {
-    for (var i = 0; i < tree.children.length; i++) 
+    for (var i = 0; i < tree.children.length; i++)
       popToScreen(tree.children[i], componentId, tree.children);
-    }
+  }
   return tree;
 }
 
@@ -86,9 +95,9 @@ export const setStackRoot = (tree, componentId, layoutArray, parentTree) => {
     parentTree.children = layoutArray;
   }
   if (tree.children && tree.children.length) {
-    for (var i = 0; i < tree.children.length; i++) 
+    for (var i = 0; i < tree.children.length; i++)
       setStackRoot(tree.children[i], componentId, layoutArray, tree);
-    }
+  }
   return tree;
 }
 
@@ -97,10 +106,10 @@ export const changeTabIndex = (tree, screensArray, selectedTabIndex, unselectedT
     if (tree.children && tree.children.length) {
       for (var i = 0; i < tree.children.length; i++) {
         const isChanged = changeTabIndex(tree.children[i], screensArray, selectedTabIndex, unselectedTabIndex, tree);
-        if (isChanged) 
+        if (isChanged)
           return tree;
-        }
       }
+    }
     if (parentTree && isTabsType(parentTree.type) && parentTree.activeIndex === unselectedTabIndex) {
       parentTree.activeIndex = selectedTabIndex;
       return tree;
@@ -113,9 +122,9 @@ export const changeTabIndexToComponent = (tree, componentId, currentTabIndex) =>
     tree.activeIndex = currentTabIndex;
   }
   if (tree.children && tree.children.length) {
-    for (var i = 0; i < tree.children.length; i++) 
+    for (var i = 0; i < tree.children.length; i++)
       changeTabIndexToComponent(tree.children[i], componentId, currentTabIndex);
-    }
+  }
   return tree;
 }
 
@@ -211,8 +220,8 @@ export const getActiveComponentId = (root) => {
 export const getActiveScreenOfTab = (tree, tabId, tabIndex) => {
   if (tree.id === tabId) {
     return getActiveComponentId(tree.children[tabIndex !== undefined
-        ? tabIndex
-        : tree.activeIndex]);
+      ? tabIndex
+      : tree.activeIndex]);
   }
   if (tree.children && tree.children.length) {
     for (var i = 0; i < tree.children.length; i++) {
