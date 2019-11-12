@@ -1,26 +1,26 @@
 import invariant from 'invariant';
 
-import {actionsPrefix} from './constants';
-import {getActiveBottomTabsId, getActiveTopTabsId, getActiveScreenId} from './selectors';
-import {getNavigator} from './init';
-import {getActiveScreenOfTab, getActiveComponentId} from './helpers';
-import {middlewareActionTypes, middlewareActionTypesArray} from './actions';
+import { actionsPrefix } from './constants';
+import { getActiveBottomTabsId, getActiveTopTabsId, getActiveScreenId } from './selectors';
+import { getNavigator } from './init';
+import { getActiveScreenOfTab, getActiveComponentId } from './helpers';
+import { middlewareActionTypes, middlewareActionTypesArray } from './actions';
 
 export const navigatorMiddleware = store => next => action => {
-  if (!action || !action.type || !typeof(action.type) === 'string' || !action.type.startsWith(actionsPrefix) || !middlewareActionTypesArray.includes(action.type)) {
+  if (!action || !action.type || !typeof (action.type) === 'string' || !action.type.startsWith(actionsPrefix) || !middlewareActionTypesArray.includes(action.type)) {
     return next(action);
   }
   const navigator = getNavigator();
   const state = store.getState();
-  const {navigation} = state;
+  const { navigation } = state;
   invariant(navigation, "You probably didn't import and apply navigation reducer");
   switch (action.type) {
     case middlewareActionTypes.push:
       {
-        const {layout, options} = action.payload;
+        const { layout, options } = action.payload;
         let activeScreenId;
         if (options) {
-          const {bottomTabIndex, topTabIndex} = options;
+          const { bottomTabIndex, topTabIndex } = options;
           let tabsId;
           let nextActiveIndex;
           if (bottomTabIndex !== undefined) {
@@ -61,10 +61,18 @@ export const navigatorMiddleware = store => next => action => {
     case middlewareActionTypes.dismissLastModal:
       {
         const modals = navigation.modals;
-        if (!modals || !modals.length) 
+        if (!modals || !modals.length)
           return;
         const activeScreenId = getActiveComponentId(modals[modals.length - 1]);
         return navigator.dismissModal(activeScreenId, action.payload.mergeOptions);
+      }
+    case middlewareActionTypes.showModal:
+      {
+        return navigator.showModal(action.payload.layout);
+      }
+    case middlewareActionTypes.showOverlay:
+      {
+        return navigator.showOverlay(action.payload.layout);
       }
     default:
       return next(action);

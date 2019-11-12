@@ -1,6 +1,6 @@
 {
   "name": "react-native-navigation-redux-integration",
-  "description": "Redux state and middleware for React Native Navigation v2",
+  "description": "Redux state and middleware for React Native Navigation v2/v3",
   "version": "0.3.8",
   "main": "./index.js",
   "author": "Matija Anic-Antic (https://github.com/manicantic)",
