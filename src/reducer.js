@@ -156,9 +156,10 @@ const reducer = (state = null, action) => {
         const root = state.root;
         const modals = state.modals;
         const overlays = state.overlays;
+        const activeScreenArray = state.activeScreenArray;
         let newActiveScreen = createActiveScreenArray(root, action.payload.componentId);
-        if(!modals.length && !overlays.length && !newActiveScreen) {
-          newActiveScreen = [...state.activeScreenArray];
+        if(activeScreenArray && !modals.length && !overlays.length && !newActiveScreen) {
+          newActiveScreen = [...activeScreenArray];
         }
         if (!newActiveScreen && modals.length) {
           let i = 0;
