@@ -10,7 +10,8 @@ import {
   getActiveSideMenuRightId,
   getActiveSideMenuRootId,
   getActiveStackId,
-  getActiveTopTabsId
+  getActiveTopTabsId,
+  getActiveStackArray
 } from './src/selectors';
 
 export {
@@ -29,5 +30,6 @@ export {
   getActiveSideMenuRightId,
   getActiveSideMenuRootId,
   getActiveStackId,
-  getActiveTopTabsId
+  getActiveTopTabsId,
+  getActiveStackArray
 };
