@@ -1,7 +1,15 @@
-import reducer from './src/reducer';
-import {initNavigatorListeners} from './src/init';
-import {navigatorMiddleware} from './src/middleware';
-import {push, pop, popToRoot, setStackRoot, dismissLastModal} from './src/actions';
+import reducer from "./src/reducer";
+import { initNavigatorListeners } from "./src/init";
+import { navigatorMiddleware } from "./src/middleware";
+import {
+  push,
+  pop,
+  popToRoot,
+  setStackRoot,
+  dismissLastModal,
+  showModal,
+  showOverlay,
+} from "./src/actions";
 import {
   getActiveScreenId,
   getActiveBottomTabsId,
@@ -11,8 +19,8 @@ import {
   getActiveSideMenuRootId,
   getActiveStackId,
   getActiveTopTabsId,
-  getActiveStackArray
-} from './src/selectors';
+  getActiveStackArray,
+} from "./src/selectors";
 
 export {
   reducer,
@@ -23,6 +31,8 @@ export {
   popToRoot,
   setStackRoot,
   dismissLastModal,
+  showModal,
+  showOverlay,
   getActiveScreenId,
   getActiveBottomTabsId,
   getActiveSideMenuCenterId,
@@ -31,5 +41,5 @@ export {
   getActiveSideMenuRootId,
   getActiveStackId,
   getActiveTopTabsId,
-  getActiveStackArray
+  getActiveStackArray,
 };
